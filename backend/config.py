@@ -62,6 +62,7 @@ log_sources = [
 
 SRC_LOG_LEVELS = {}
 
+#
 for source in log_sources:
     log_env_var = source + "_LOG_LEVEL"
     SRC_LOG_LEVELS[source] = os.environ.get(log_env_var, "").upper()
