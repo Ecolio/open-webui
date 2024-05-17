@@ -44,6 +44,11 @@ from ingestion import store_data_in_vector_db, store_text_in_vector_db, get_load
 from database import update_embedding_model, update_reranking_model
 from embedding import get_embedding_function
 from similarity import query_doc_handler, query_collection_handler
+from handlers.youtube_handler import store_youtube_video_handler
+from handlers.web_handler import store_web_handler
+from handlers.docx_handler import store_doc_handler
+from handlers.text_handler import store_text_handler
+from handlers.scan_handler import scan_docs_dir_handler
 
 log = logging.getLogger(__name__)
 log.setLevel(SRC_LOG_LEVELS["RAG"])

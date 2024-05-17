@@ -5,7 +5,7 @@ from config import YOUTUBE_LOADER_LANGUAGE, YOUTUBE_LOADER_TRANSLATION
 log = logging.getLogger(__name__)
 
 
-def handle_youtube(url):
+def store_youtube_video_handler(url):
     return YoutubeLoader.from_youtube_url(
         url,
         add_video_info=True,

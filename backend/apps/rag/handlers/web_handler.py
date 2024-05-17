@@ -9,7 +9,7 @@ from config import ENABLE_RAG_LOCAL_WEB_FETCH
 log = logging.getLogger(__name__)
 
 
-def handle_web(url, verify_ssl=True):
+def store_web_handler(url, verify_ssl=True):
     if isinstance(validators.url(url), validators.ValidationError):
         raise ValueError(ERROR_MESSAGES.INVALID_URL)
     if not ENABLE_RAG_LOCAL_WEB_FETCH:

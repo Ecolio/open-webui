@@ -21,8 +21,8 @@ from apps.rag.main import app  # Import the app instance
 from handlers.pdf_handler import handle_pdf
 from handlers.csv_handler import handle_csv
 from handlers.web_handler import handle_html
-from handlers.youtube_handler import handle_youtube
-from handlers.docx_handler import handle_docx
+from handlers.youtube_handler import store_youtube_video_handler
+from handlers.docx_handler import store_doc_handler
 from handlers.epub_handler import handle_epub
 from handlers.excel_handler import handle_excel
 from handlers.markdown_handler import handle_markdown
@@ -134,7 +134,7 @@ def get_loader(filename: str, file_content_type: str, file_path: str):
         == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         or file_ext in ["doc", "docx"]
     ):
-        return handle_docx(file_path), True
+        return store_doc_handler(file_path), True
     elif file_content_type in [
         "application/vnd.ms-excel",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
