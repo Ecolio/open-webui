@@ -1,6 +1,8 @@
 import os
 import logging
 import requests
+import nltk
+from nltk.tokenize import sent_tokenize
 
 from typing import List
 
@@ -428,6 +430,47 @@ from typing import Any
 
 from langchain_core.retrievers import BaseRetriever
 from langchain_core.callbacks import CallbackManagerForRetrieverRun
+
+nltk.download("punkt")
+
+
+class SentenceTextSplitter:
+    def __init__(self, sentences_per_chunk: int, chunk_overlap: int):
+        self.sentences_per_chunk = sentences_per_chunk
+        self.chunk_overlap = chunk_overlap
+
+    def split_text(self, text: str):
+        sentences = sent_tokenize(text)
+        chunks = []
+
+        for i in range(
+            0, len(sentences), self.sentences_per_chunk - self.chunk_overlap
+        ):
+            chunk = " ".join(sentences[i : i + self.sentences_per_chunk])
+            chunks.append(chunk)
+
+        return chunks
+
+
+# Update your store_data_in_vector_db function to use SentenceTextSplitter
+def store_data_in_vector_db(data, collection_name, overwrite: bool = False) -> bool:
+    # Using SentenceTextSplitter instead of RecursiveCharacterTextSplitter
+    text_splitter = SentenceTextSplitter(
+        sentences_per_chunk=5,  # Set the number of sentences per chunk
+        chunk_overlap=1,  # Set the number of overlapping sentences between chunks
+    )
+
+    docs = []
+    for document in data:
+        chunks = text_splitter.split_text(document.page_content)
+        for chunk in chunks:
+            docs.append(Document(page_content=chunk, metadata=document.metadata))
+
+    if len(docs) > 0:
+        log.info(f"store_data_in_vector_db {docs}")
+        return store_docs_in_vector_db(docs, collection_name, overwrite), None
+    else:
+        raise ValueError(ERROR_MESSAGES.EMPTY_CONTENT)
 
 
 class ChromaRetriever(BaseRetriever):

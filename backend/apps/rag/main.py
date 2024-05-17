@@ -58,6 +58,7 @@ from apps.rag.utils import (
     query_doc_with_hybrid_search,
     query_collection,
     query_collection_with_hybrid_search,
+    SentenceTextSplitter,
 )
 
 from utils.misc import (
@@ -127,6 +128,32 @@ app.state.PDF_EXTRACT_IMAGES = PDF_EXTRACT_IMAGES
 
 app.state.YOUTUBE_LOADER_LANGUAGE = YOUTUBE_LOADER_LANGUAGE
 app.state.YOUTUBE_LOADER_TRANSLATION = None
+
+
+def store_data_in_vector_db(data, collection_name, overwrite: bool = False) -> bool:
+    # Use SentenceTextSplitter instead of RecursiveCharacterTextSplitter
+    text_splitter = SentenceTextSplitter(
+        sentences_per_chunk=app.state.SENTENCES_PER_CHUNK,
+        chunk_overlap=app.state.CHUNK_OVERLAP,
+    )
+
+    docs = []
+    for document in data:
+        chunks = text_splitter.split_text(document.page_content)
+        for chunk in chunks:
+            docs.append(Document(page_content=chunk, metadata=document.metadata))
+
+    if len(docs) > 0:
+        log.info(f"store_data_in_vector_db {docs}")
+        return store_docs_in_vector_db(docs, collection_name, overwrite), None
+    else:
+        raise ValueError(ERROR_MESSAGES.EMPTY_CONTENT)
+
+
+# Update your FastAPI app state to include SENTENCES_PER_CHUNK
+app.state.SENTENCES_PER_CHUNK = (
+    5  # Set this to your desired number of sentences per chunk
+)
 
 
 def update_embedding_model(
