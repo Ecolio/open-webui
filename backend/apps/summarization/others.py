@@ -4,6 +4,7 @@ from llama_index import QueryEngine, MetadataFilters
 import requests
 import json
 
+# important information regarding the llama3 extented context window model: https://ollama.com/library/llama3-gradient
 
 def vector_query_tool(
     query: str, page_numbers: List[str] = [], document: str = None
