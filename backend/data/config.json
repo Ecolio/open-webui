@@ -56,14 +56,14 @@
 	},
 	"rag": {
 		"embedding_engine": "ollama",
-		"embedding_model": "mxbai-embed-large:latest",
-		"template": "Use the following context as your learned knowledge, inside <context></context> XML tags.\n<context>\n    [context]\n</context>\n\nWhen answer to user:\n- If you don't know, just say that you don't know.\n- If you don't know when you are not sure, ask for clarification.\nAvoid mentioning that you obtained the information from the context.\nAnd answer according to the language of the user's question.\n\nGiven the context information, answer the query.\nQuery: [query]",
-		"top_k": 10,
+		"embedding_model": "nomic-embed-text:latest",
+		"template": "\n<context>\n    [context]\n</context>\n\n<|start_header_id|>user<|end_header_id|>\n\nQuery: [query]<|eot_id|>\n<|start_header_id|>assistant<|end_header_id|>\n\n{{ .Response }}<|eot_id|>\n\nPARAMETER stop \"<|start_header_id|>\"\nPARAMETER stop \"<|end_header_id|>\"\nPARAMETER stop \"<|eot_id|>\"\nPARAMETER stop \"<|reserved_special_token|>\"\n\nCONFIG\n{\n  \"temperature\": 0\n}\n\nWhen answer to user:\n- If you don't know, just say that you don't know.\n- If you don't know when you are not sure, ask for clarification.\nAvoid mentioning that you obtained the information from the context.\nAnd answer according to the language of the user's question.\n\nGiven the context information, answer the query.\nQuery: [query]",
+		"top_k": 5,
 		"relevance_threshold": 0.0,
 		"enable_hybrid_search": false,
 		"pdf_extract_images": false,
-		"chunk_size": 256,
-		"chunk_overlap": 100,
+		"chunk_size": 1024,
+		"chunk_overlap": 500,
 		"enable_web_loader_ssl_verification": true,
 		"youtube_loader_language": [
 			"en"
